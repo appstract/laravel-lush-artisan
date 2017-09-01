@@ -42,6 +42,12 @@ class Watch extends Command
                $this->renderRequestEvents($requestEvent);
             }
 
+            $exceptionEvent = EventStorage::get('exception');
+
+            if ($exceptionEvent) {
+                $this->renderExceptionEvents($exceptionEvent);
+            }
+
             $responseEvent = EventStorage::get('response');
 
             if ($responseEvent) {
@@ -61,6 +67,17 @@ class Watch extends Command
             $this->line(PHP_EOL);
 
             EventStorage::clear('request');
+        }
+    }
+
+    protected function renderExceptionEvents($events)
+    {
+        foreach ($events as $event) {
+            $this->warn('New Lush exception for: '.$event->exception->request->payload->url);
+            dump($event);
+            $this->line(PHP_EOL);
+
+            EventStorage::clear('exception');
         }
     }
 

@@ -34,6 +34,10 @@ class LushArtisanServiceProvider extends ServiceProvider
             EventStorage::add('response', $event);
         });
 
+        Event::listen(\Appstract\LushHttp\Events\RequestExceptionEvent::class, function ($event) {
+            EventStorage::add('exception', $event);
+        });
+
         // config
 //        $this->mergeConfigFrom(__DIR__.'/../config/opcache.php', 'opcache');
     }
