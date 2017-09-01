@@ -29,7 +29,7 @@ class Watch extends Command
      */
     public function handle()
     {
-        $this->line('Listening for Lush requests in your app...');
+        $this->line('Listening for Lush requests...');
         $this->line('Press ctrl+c to exit'.PHP_EOL);
 
         EventStorage::clear('request');
@@ -42,16 +42,16 @@ class Watch extends Command
                $this->renderRequestEvents($requestEvent);
             }
 
-            $exceptionEvent = EventStorage::get('exception');
-
-            if ($exceptionEvent) {
-                $this->renderExceptionEvents($exceptionEvent);
-            }
-
             $responseEvent = EventStorage::get('response');
 
             if ($responseEvent) {
                 $this->renderResponseEvents($responseEvent);
+            }
+
+            $exceptionEvent = EventStorage::get('exception');
+
+            if ($exceptionEvent) {
+                $this->renderExceptionEvents($exceptionEvent);
             }
 
             sleep(1);
@@ -62,34 +62,77 @@ class Watch extends Command
     protected function renderRequestEvents($events)
     {
         foreach ($events as $event) {
-            $this->info('New Lush request for: '.$event->request->payload->url);
-            dump($event->request);
+            $this->info('New Lush Request::');
+            $this->table(['Request Url', 'Parameters', 'Headers', 'Options'], [$this->renderRequestTable($event->request)]);
             $this->line(PHP_EOL);
-
-            EventStorage::clear('request');
         }
+
+        EventStorage::clear('request');
     }
 
-    protected function renderExceptionEvents($events)
+    protected function renderRequestTable($data)
     {
-        foreach ($events as $event) {
-            $this->warn('New Lush exception for: '.$event->exception->request->payload->url);
-            dump($event);
-            $this->line(PHP_EOL);
-
-            EventStorage::clear('exception');
-        }
+        return [
+            '['.$data->method.'] '.$data->payload->url,
+            $this->stringifyArray($data->payload->parameters),
+            $this->stringifyArray($data->payload->headers),
+            $this->stringifyArray($data->payload->options),
+        ];
     }
 
     protected function renderResponseEvents($events)
     {
         foreach ($events as $event) {
-            $this->info('New Lush response for: '.$event->response->request->payload->url);
-            dump($event->response->object);
-//            dump($event->response);
-            $this->line(PHP_EOL);
+            if ($event->response->content) {
+                $this->info('New Lush Response:: ');
+                $this->table(['Request Url', 'Response Headers', 'Is Json', 'Is Xml'], [$this->renderResponseTable($event->response)]);
+                $this->info('Response Result:');
 
-            EventStorage::clear('response');
+                if ($event->response->object) {
+                    dump($event->response->object);
+                } else {
+                    dump($event->response->content);
+                }
+            } else {
+                $this->warn('Empty response on: '.$event->response->request->payload->url);
+            }
+
+            $this->line(PHP_EOL);
         }
+
+        EventStorage::clear('response');
+    }
+
+    protected function renderResponseTable($data)
+    {
+        return [
+            '['.$data->request->method.'] '.$data->request->payload->url,
+            $this->stringifyArray($data->headers),
+            $data->is_json,
+            $data->is_xml,
+        ];
+    }
+
+    protected function renderExceptionEvents($events)
+    {
+        foreach ($events as $event) {
+            $this->error('Exception on url: '.$event->exception->request->payload->url);
+            $this->error($event->exception->message);
+            $this->line(PHP_EOL);
+        }
+
+        EventStorage::clear('exception');
+    }
+
+    protected function stringifyArray($array)
+    {
+        $string = '';
+
+        array_walk_recursive($array, function ($value, $key) use (&$string) {
+                $string .= $key . ' => ' . $value . PHP_EOL;
+            }
+        );
+
+        return $string;
     }
 }
