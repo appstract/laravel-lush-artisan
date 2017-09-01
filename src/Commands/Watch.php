@@ -59,6 +59,9 @@ class Watch extends Command
 
     }
 
+    /**
+     * @param $events
+     */
     protected function renderRequestEvents($events)
     {
         foreach ($events as $event) {
@@ -70,6 +73,11 @@ class Watch extends Command
         EventStorage::clear('request');
     }
 
+    /**
+     * @param $data
+     *
+     * @return array
+     */
     protected function renderRequestTable($data)
     {
         return [
@@ -80,6 +88,9 @@ class Watch extends Command
         ];
     }
 
+    /**
+     * @param $events
+     */
     protected function renderResponseEvents($events)
     {
         foreach ($events as $event) {
@@ -103,6 +114,11 @@ class Watch extends Command
         EventStorage::clear('response');
     }
 
+    /**
+     * @param $data
+     *
+     * @return array
+     */
     protected function renderResponseTable($data)
     {
         return [
@@ -113,6 +129,9 @@ class Watch extends Command
         ];
     }
 
+    /**
+     * @param $events
+     */
     protected function renderExceptionEvents($events)
     {
         foreach ($events as $event) {
@@ -124,6 +143,11 @@ class Watch extends Command
         EventStorage::clear('exception');
     }
 
+    /**
+     * @param $array
+     *
+     * @return string
+     */
     protected function stringifyArray($array)
     {
         $string = '';
