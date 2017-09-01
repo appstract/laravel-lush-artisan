@@ -1,0 +1,52 @@
+{
+    "name": "appstract/laravel-lush-artisan",
+    "description": "Artisan commands for Lush.",
+    "keywords": [
+        "appstract",
+        "laravel",
+        "php"
+    ],
+    "homepage": "https://github.com/appstract/laravel-lush-artisan",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Olav van Schie",
+            "email": "hello@appstract.team",
+            "homepage": "https://appstract.team",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "illuminate/console": ">=5.4",
+        "illuminate/support": ">=5.4",
+        "illuminate/routing": ">=5.4"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.3",
+        "phpunit/phpunit": "5.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Appstract\\LushArtisan\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Appstract\\LushArtisan\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Appstract\\Opcache\\OpcacheServiceProvider"
+            ]
+        }
+    }
+}
