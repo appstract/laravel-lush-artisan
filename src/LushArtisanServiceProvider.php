@@ -4,7 +4,7 @@ namespace Appstract\LushArtisan;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
-
+use Appstract\LushArtisan\EventStorageFacade as EventStorage;
 
 class LushArtisanServiceProvider extends ServiceProvider
 {
@@ -27,15 +27,11 @@ class LushArtisanServiceProvider extends ServiceProvider
     {
 
         Event::listen(\Appstract\LushHttp\Events\RequestEvent::class, function ($event) {
-
-            \File::put(storage_path('framework/lush_request'), json_encode($event));
-
+            EventStorage::add('request', $event);
         });
 
         Event::listen(\Appstract\LushHttp\Events\ResponseEvent::class, function ($event) {
-
-            \File::put(storage_path('framework/lush_response'), json_encode($event));
-
+            EventStorage::add('response', $event);
         });
 
         // config

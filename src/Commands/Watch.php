@@ -4,12 +4,10 @@ namespace Appstract\LushArtisan\Commands;
 
 use File;
 use Illuminate\Console\Command;
-use Appstract\Opcache\CreatesRequest;
+use Appstract\LushArtisan\EventStorageFacade as EventStorage;
 
 class Watch extends Command
 {
-    use CreatesRequest;
-
     /**
      * The console command name.
      *
@@ -34,46 +32,47 @@ class Watch extends Command
         $this->line('Listening for Lush requests in your app...');
         $this->line('Press ctrl+c to exit'.PHP_EOL);
 
+        EventStorage::clear('request');
+        EventStorage::clear('response');
 
-        $this->truncateFile('request');
-        $this->truncateFile('response');
-
-
-        while(true) {
-
-            $requestEvent = json_decode($this->readFile('request'));
+        while (true) {
+            $requestEvent = EventStorage::get('request');
 
             if ($requestEvent) {
-                $this->line('New Lush request to: '.$requestEvent->request->payload->url);
-                dump($requestEvent->request);
-                $this->line(PHP_EOL);
-
-                $this->truncateFile('request');
+               $this->renderRequestEvents($requestEvent);
             }
 
-            $responseEvent = json_decode($this->readFile('response'));
-
+            $responseEvent = EventStorage::get('response');
 
             if ($responseEvent) {
-                $this->line('New Lush response:'.PHP_EOL.PHP_EOL);
-                dump($responseEvent->response);
-                $this->truncateFile('response');
+                $this->renderResponseEvents($responseEvent);
             }
-
-            exit;
 
             sleep(1);
         }
 
     }
 
-    protected function readFile($file)
+    protected function renderRequestEvents($events)
     {
-        return File::get(storage_path('framework/lush_'.$file));
+        foreach ($events as $event) {
+            $this->info('New Lush request for: '.$event->request->payload->url);
+            dump($event->request);
+            $this->line(PHP_EOL);
+
+            EventStorage::clear('request');
+        }
     }
 
-    protected function truncateFile($file)
+    protected function renderResponseEvents($events)
     {
-//        File::put(storage_path('framework/lush_'.$file), '');
+        foreach ($events as $event) {
+            $this->info('New Lush response for: '.$event->response->request->payload->url);
+            dump($event->response->object);
+//            dump($event->response);
+            $this->line(PHP_EOL);
+
+            EventStorage::clear('response');
+        }
     }
 }
