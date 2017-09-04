@@ -6,7 +6,7 @@
 
 This package contains some useful Artisan commands, to work with and debug [Lush Http](https://github.com/appstract/lush-http).
 
-[<img src="screen.png?raw=true">]
+<img src="screen.png?raw=true">
 ## Installation
 
 You can install the package via Composer:
