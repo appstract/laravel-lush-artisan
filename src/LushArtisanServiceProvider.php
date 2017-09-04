@@ -14,6 +14,8 @@ class LushArtisanServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
+                Commands\Get::class,
+                Commands\Head::class,
                 Commands\Watch::class,
             ]);
         }
