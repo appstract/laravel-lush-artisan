@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Appstract\LushArtisan;
 
 use File;
@@ -36,6 +35,12 @@ class EventStorage
         }
 
         $items[] = $event;
+
+        // limit the amount of events to log
+        if (count($items) > 5) {
+            unset($items[0]); // remove the oldest
+            $items = array_values($items);
+        }
 
         File::put($this->getPath($type), json_encode($items));
     }

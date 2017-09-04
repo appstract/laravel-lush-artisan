@@ -32,7 +32,7 @@ class Watch extends Command
         $this->line('Listening for Lush requests...');
         $this->line('Press ctrl+c to exit');
 
-//        EventStorage::clearAll();
+        EventStorage::clearAll();
 
         while (true) {
             foreach (LushEvents::all() as $type) {
