@@ -4,7 +4,10 @@
     "keywords": [
         "appstract",
         "laravel",
-        "php"
+        "lush",
+        "lush-http",
+        "php",
+        "curl"
     ],
     "homepage": "https://github.com/appstract/laravel-lush-artisan",
     "license": "MIT",
