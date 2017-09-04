@@ -1,8 +1,8 @@
 # Artisan Commands For Lush Http
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/appstract/laravel-lush-artisan.svg?style=flat-square)](https://packagist.org/packages/appstract/laravel-opcache)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/appstract/laravel-lush-artisan.svg?style=flat-square)](https://packagist.org/packages/appstract/laravel-lush-artisan)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/appstract/laravel-lush-artisan.svg?style=flat-square)](https://packagist.org/packages/appstract/laravel-opcache)
+[![Total Downloads](https://img.shields.io/packagist/dt/appstract/laravel-lush-artisan.svg?style=flat-square)](https://packagist.org/packages/appstract/laravel-lush-artisan)
 
 This package contains some useful Artisan commands, to work with and debug [Lush Http](https://github.com/appstract/lush-http).
 
