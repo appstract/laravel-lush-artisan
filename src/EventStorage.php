@@ -7,7 +7,6 @@ use Appstract\LushArtisan\Events as LushEvents;
 
 class EventStorage
 {
-
     protected $baseDir = 'lush';
 
     /**
@@ -15,13 +14,13 @@ class EventStorage
      */
     public function __construct()
     {
-        if (!is_dir(storage_path($this->baseDir))) {
+        if (! is_dir(storage_path($this->baseDir))) {
             mkdir(storage_path($this->baseDir), 0755, true);
         }
     }
 
     /**
-     * Add an event entry
+     * Add an event entry.
      *
      * @param $type
      * @param $event
@@ -46,7 +45,7 @@ class EventStorage
     }
 
     /**
-     * Get event entries
+     * Get event entries.
      *
      * @param $type
      *
@@ -60,7 +59,7 @@ class EventStorage
     }
 
     /**
-     * Clear event entries of given type
+     * Clear event entries of given type.
      *
      * @param $type
      */
@@ -70,7 +69,7 @@ class EventStorage
     }
 
     /**
-     * Clear event entries of all types
+     * Clear event entries of all types.
      */
     public function clearAll()
     {
@@ -80,7 +79,7 @@ class EventStorage
     }
 
     /**
-     * Get the storage path of the given type
+     * Get the storage path of the given type.
      *
      * @param $type
      *
