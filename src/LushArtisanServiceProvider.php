@@ -3,8 +3,7 @@
 namespace Appstract\LushArtisan;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Event;
-use Appstract\LushArtisan\EventStorageFacade as EventStorage;
+use Appstract\LushArtisan\Events as LushEvents;
 
 class LushArtisanServiceProvider extends ServiceProvider
 {
@@ -25,18 +24,7 @@ class LushArtisanServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-        Event::listen(\Appstract\LushHttp\Events\RequestEvent::class, function ($event) {
-            EventStorage::add('request', $event);
-        });
-
-        Event::listen(\Appstract\LushHttp\Events\ResponseEvent::class, function ($event) {
-            EventStorage::add('response', $event);
-        });
-
-        Event::listen(\Appstract\LushHttp\Events\RequestExceptionEvent::class, function ($event) {
-            EventStorage::add('exception', $event);
-        });
+        LushEvents::registerListeners();
 
         // config
 //        $this->mergeConfigFrom(__DIR__.'/../config/opcache.php', 'opcache');

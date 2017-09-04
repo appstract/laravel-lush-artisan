@@ -2,8 +2,8 @@
 
 namespace Appstract\LushArtisan\Commands;
 
-use File;
 use Illuminate\Console\Command;
+use Appstract\LushArtisan\Events as LushEvents;
 use Appstract\LushArtisan\EventStorageFacade as EventStorage;
 
 class Watch extends Command
@@ -30,28 +30,19 @@ class Watch extends Command
     public function handle()
     {
         $this->line('Listening for Lush requests...');
-        $this->line('Press ctrl+c to exit'.PHP_EOL);
+        $this->line('Press ctrl+c to exit');
 
-        EventStorage::clear('request');
-        EventStorage::clear('response');
+//        EventStorage::clearAll();
 
         while (true) {
-            $requestEvent = EventStorage::get('request');
+            foreach (LushEvents::all() as $type) {
+                $event = EventStorage::get($type);
 
-            if ($requestEvent) {
-               $this->renderRequestEvents($requestEvent);
-            }
+                if ($event) {
+                    $this->{("render{$type}")}($event);
+                }
 
-            $responseEvent = EventStorage::get('response');
-
-            if ($responseEvent) {
-                $this->renderResponseEvents($responseEvent);
-            }
-
-            $exceptionEvent = EventStorage::get('exception');
-
-            if ($exceptionEvent) {
-                $this->renderExceptionEvents($exceptionEvent);
+                EventStorage::clear($type);
             }
 
             sleep(1);
@@ -62,15 +53,13 @@ class Watch extends Command
     /**
      * @param $events
      */
-    protected function renderRequestEvents($events)
+    protected function renderRequestEvent($events)
     {
         foreach ($events as $event) {
+            $this->line(PHP_EOL);
             $this->info('New Lush Request::');
             $this->table(['Request Url', 'Parameters', 'Headers', 'Options'], [$this->renderRequestTable($event->request)]);
-            $this->line(PHP_EOL);
         }
-
-        EventStorage::clear('request');
     }
 
     /**
@@ -91,27 +80,23 @@ class Watch extends Command
     /**
      * @param $events
      */
-    protected function renderResponseEvents($events)
+    protected function renderResponseEvent($events)
     {
         foreach ($events as $event) {
-            if ($event->response->content) {
-                $this->info('New Lush Response:: ');
-                $this->table(['Request Url', 'Response Headers', 'Is Json', 'Is Xml'], [$this->renderResponseTable($event->response)]);
-                $this->info('Response Result:');
-
-                if ($event->response->object) {
-                    dump($event->response->object);
-                } else {
-                    dump($event->response->content);
-                }
-            } else {
-                $this->warn('Empty response on: '.$event->response->request->payload->url);
-            }
-
             $this->line(PHP_EOL);
-        }
+            $this->info('New Lush Response:: ');
 
-        EventStorage::clear('response');
+            $this->table(['Request Url', 'Response Headers', 'Is Json', 'Is Xml'], [$this->renderResponseTable($event->response)]);
+            $this->info('Response Result:');
+
+            if ($event->response->object) {
+                dump($event->response->object);
+            } else if ($event->response->content) {
+                dump($event->response->content);
+            } else {
+                $this->warn('- empty response -');
+            }
+        }
     }
 
     /**
@@ -132,15 +117,14 @@ class Watch extends Command
     /**
      * @param $events
      */
-    protected function renderExceptionEvents($events)
+    protected function renderRequestExceptionEvent($events)
     {
         foreach ($events as $event) {
-            $this->error('Exception on url: '.$event->exception->request->payload->url);
-            $this->error($event->exception->message);
             $this->line(PHP_EOL);
+            $this->error('New Lush Exception:');
+            $this->error(sprintf('[%s] %s', $event->exception->request->method, $event->exception->request->payload->url));
+            $this->error($event->exception->message);
         }
-
-        EventStorage::clear('exception');
     }
 
     /**
