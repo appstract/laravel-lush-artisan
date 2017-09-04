@@ -47,7 +47,6 @@ class Watch extends Command
 
             sleep(1);
         }
-
     }
 
     /**
@@ -91,7 +90,7 @@ class Watch extends Command
 
             if ($event->response->object) {
                 dump($event->response->object);
-            } else if ($event->response->content) {
+            } elseif ($event->response->content) {
                 dump($event->response->content);
             } else {
                 $this->warn('- empty response -');
@@ -137,8 +136,8 @@ class Watch extends Command
         $string = '';
 
         array_walk_recursive($array, function ($value, $key) use (&$string) {
-                $string .= $key . ' => ' . $value . PHP_EOL;
-            }
+            $string .= $key.' => '.$value.PHP_EOL;
+        }
         );
 
         return $string;

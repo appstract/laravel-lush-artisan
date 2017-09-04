@@ -2,8 +2,8 @@
 
 namespace Appstract\Opcache\Test;
 
-use Appstract\Opcache\LushArtisanServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Appstract\Opcache\LushArtisanServiceProvider;
 
 abstract class TestCase extends Orchestra
 {

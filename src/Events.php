@@ -19,7 +19,7 @@ class Events
     ];
 
     /**
-     * Get all events
+     * Get all events.
      *
      * @return array
      */
@@ -29,7 +29,7 @@ class Events
     }
 
     /**
-     * Register the event listeners
+     * Register the event listeners.
      */
     public static function registerListeners()
     {
