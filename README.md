@@ -16,15 +16,6 @@ You can install the package via Composer:
 composer require appstract/laravel-lush-artisan
 ```
 
-For Laravel older than 5.5, register the service provider to your `config/app.php` file:
-
-```php
-'providers' => [
-    ...
-    Appstract\LushArtisan\LushArtisanServiceProvider::class,
-];
-```
-
 ## Usage
 
 Make a GET request:
